@@ -1,0 +1,15 @@
+.image-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr); /* Creates 3 equal columns */
+  gap: 20px;                             /* Space between images */
+  padding: 20px;
+  max-width: 900px;                      /* Centers and limits the grid width */
+  margin: 0 auto;                        
+}
+
+.grid-image {
+  width: 100%;                           /* Image takes full width of its grid cell */
+  height: auto;                          /* Maintains the aspect ratio */
+  border-radius: 8px;                    /* Optional: rounds the corners slightly */
+  object-fit: cover;
+}
