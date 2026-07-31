@@ -15,7 +15,7 @@ setTimeout(() => {
     console.log("this is second timeout" )
 }, 5000);
 new Promise((resolve,reject)=>{
-    let success = true;
+    let success = false;
     if(success){
         resolve("this is promise resolved");
     } else {
