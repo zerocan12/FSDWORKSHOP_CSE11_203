@@ -25,3 +25,11 @@ button.dispatchEvent({
     eventType : "save" ,
     details : "this is save event"
 });
+function handleClick(event){
+    console.log("button clicked");
+
+}
+button.addEventListener('click' , handleClick);
+button.dispatchEvent({
+    eventType : "click"
+})
