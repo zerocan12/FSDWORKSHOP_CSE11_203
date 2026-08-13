@@ -33,3 +33,6 @@ button.addEventListener('click' , handleClick);
 button.dispatchEvent({
     eventType : "click"
 })
+button.dispatchEvent({
+    eventType : "click"
+});
