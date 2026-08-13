@@ -33,6 +33,15 @@ button.addEventListener('click' , handleClick);
 button.dispatchEvent({
     eventType : "click"
 })
-button.dispatchEvent({
-    eventType : "click"
+const button1 = createDomElements();
+button1.addEventListener('submit' , ()=>{
+    console.log("submitted");
 });
+button1.dispatchEvent({
+    eventType : "submit"
+
+});
+function handleSubmit(event){
+    console.log("form submitted");
+}
+button1.addEventListener('submit' , handleSubmit);
