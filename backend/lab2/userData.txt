@@ -1,2 +1,0 @@
-this is a test file content
-This is additional content.

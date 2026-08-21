@@ -1,7 +1,7 @@
 import fs from 'node:fs/promises';
 
 const filepath = 'userData.txt';
-const content = 'fs.read';
+const content = 'This is the initial content of the file.';
 
 async function createFile(contentToWrite) {
   try {
@@ -39,7 +39,12 @@ async function deleteFile() {
   }
 }
 
-createFile("this is a test file content");
-readFile();
-appendFile("\nThis is additional content.");
-deleteFile();
+async function main() {
+  await createFile(content);
+  await readFile();
+  await appendFile('\nThis is additional content.');
+  await readFile();
+  await deleteFile();
+}
+
+main();
