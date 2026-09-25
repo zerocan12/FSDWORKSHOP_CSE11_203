@@ -1,122 +1,153 @@
-import express from "express";
+import express from 'express'
+import dotenv from 'dotenv'
+import cors from 'cors'
 
-const app = express();
-const port = 3002;
+const port = 3000
 
-app.use(express.json());
-
-const users = [
-  {
-    id: 1,
-    name: "Aniket",
-    email: "aniket@example.com"
-  }
-];
-
-const userRouter = express.Router();
+const app = express()
+app.use(express.json())
+app.use(cors())
+const array = [
+    {
+        id: 1,
+        name: "Akarsh",
+        age: 20
+    },
+    {
+        id: 2,
+        name: "Akshat",
+        age: 21
+    },
+    {
+        id: 3,
+        name: "Ansh",
+        age: 17
+    }
+]
 
 app.get("/", (req, res) => {
-  res.status(200).json({ message: "Welcome to the Express server!" });
-});
+    res.status(200).send(`listening on port ${port}`)
+})
+
+app.get("/msg", (req, res) => {
+    res.status(200).json({
+        message : "Welcome to express server"
+    })
+})
 
 
-app.get("/users", (req, res) => {
-  try {
-    res.status(200).json({ message: "data received", userData: users });
-  } catch (error) {
-    res.status(500).json({ message: "Error", error: error.message });
-  }
-});
-
-app.get("/user/:id", (req, res) => { 
-
-  try {
-    const id = req.params.id;
-    const user = users.find((u)=> u.id == id);
-    if(!user){
-      return res.status(400).json({ message: "user not found " })
-    }
-    res.status(200).json({ message: "data received", user });
-  } catch(err){
-    console.error("Error", err.message);
-  }
-});
-
-app.put("/edit/:id", (req, res) => {
-  try {
-    const id = req.params.id;
-    const { name, email } = req.body;
-    const user = users.findIndex((u) => u.id == id);
-    if (user === -1) {
-      return res.status(400).json({ message: "User not found" });
-    }
-    users[user] = { 
-      id,
-      name,
-      email
-    };
-    return res.status(200).json({ message: "User updated", user: users[user] });
-  } catch (err) {
-    console.error("Error", err.message);
-    return res.status(500).json({ message: "Internal server error" });
-  }
-});
-
-app.delete("/delete/:id", (req, res) => {
+app.get("/user", (req, res) => {
     try {
-      const id = req.params.id;
-      const userIndex = users.findIndex((u) => u.id == id);
-      if (userIndex === -1) {
-        return res.status(400).json({ message: "User not found" });
-      }
-      users.splice(userIndex, 1);
-      return res.status(200).json({ message: "User deleted" });
+        res.status(200).json({
+            message: "data recieved",
+            userData: array
+        })
     } catch (err) {
-      console.error("Error", err.message);
-      return res.status(500).json({ message: "Internal server error" });
+        console.error(err.message)
+        res.status(500).json({
+            message: "Internal server error"
+        })
     }
-});
+})
 
-  
-userRouter.get("/", (req, res) => {
-  res.json(users);
-});
+app.get("/user/:id", (req, res) => {
+    try {
+        const id = req.params.id ;
+        const user = array.find((u)=> u.id == id);
+        if(!user){
+            return res.status(400).json({message: "user not found"})
+        }
+        res.status(200).json({message : "user found" , 
+            user
+        })
+    } catch (err) {
+        console.error(err.message)
+        res.status(500).json({
+            message: "Internal server error"
+        })
+    }
+})
 
+app.post("/create" , (req,res)=>{
+    try{
+        const {name , age} = req.body ;
+        const newUser = {
+            id: array.length+1,
+            name,
+            age,
+        };
+        array.push(newUser);
+        console.log("User added successfully")
+        console.log(array)
+        res.status(201).json({
+            message: "User created successfully",
+            userData: newUser
+        })
+    }
+    catch(err){
+        console.error(err.message)
+        res.status(500).json({
+            message: "Internal server error"
+        })
+    }
+})
 
-userRouter.get("/:id", (req, res) => {
-  const user = users.find((item) => item.id === Number(req.params.id));
+app.put("/user/:id", (req, res) => {
+    try {
+        const id = req.params.id
+        const { name, age } = req.body
 
-  if (!user) {
-    return res.status(404).json({ message: "User not found" });
-  }
+        const user = array.find((u) => u.id == id)
 
-  res.json(user);
-});
+        if (!user) {
+            return res.status(404).json({
+                message: "User not found"
+            })
+        }
 
+        user.name = name
+        user.age = age
 
-userRouter.post("/", (req, res) => {
-  const { name, email } = req.body;
+        res.status(200).json({
+            message: "User updated successfully",
+            userData: user
+        })
+    }
+    catch (err) {
+        console.error(err.message)
+        res.status(500).json({
+            message: "Internal server error"
+        })
+    }
+})
 
-  if (!name || !email) {
-    return res.status(400).json({ message: "Name and email are required" });
-  }
+app.delete("/user/:id", (req, res) => {
+    try {
+        const id = req.params.id
 
-  const newUser = {
-    id: users.length + 1,
-    name,
-    email
-  };
+        const index = array.findIndex((u) => u.id == id)
 
-  users.push(newUser);
-  res.status(201).json({ message: "User created", user: newUser });
-});
+        if (index === -1) {
+            return res.status(404).json({
+                message: "User not found"
+            })
+        }
 
-app.use("/api/users", userRouter);
+        const deletedUser = array.splice(index, 1)
 
-app.get("/", (req, res) => {
-  res.json({ message: "Express server is running" });
-});
+        res.status(200).json({
+            message: "User deleted successfully",
+            userData: deletedUser[0]
+        })
+    }
+    catch (err) {
+        console.error(err.message)
+        res.status(500).json({
+            message: "Internal server error"
+        })
+    }
+})
 
 app.listen(port, () => {
-  console.log(`Server is running on http://localhost:${port}`);
-});
+    console.log(`Server is running at http://localhost:${port}`)
+})

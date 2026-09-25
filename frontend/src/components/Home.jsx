@@ -1,4 +1,3 @@
-import React from 'react';
 import './Home.css';
 import GemniImage from '../assets/Gemini_Generated_Image_cr51vmcr51vmcr51.png';
 import img1 from 'D:/FSDWORKSHOP/FSDWORKSHOP_CSE11_203/frontend/src/assets/img1.png';

@@ -2,10 +2,9 @@
   "name": "lab6",
   "version": "1.0.0",
   "description": "",
-  "main": "expressServer.js",
+  "main": "index.js",
   "scripts": {
-    "start": "node expressServer.js",
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "dev": "nodemon expressServer.js"
   },
   "keywords": [],
   "author": "",
@@ -13,6 +12,7 @@
   "type": "module",
   "dependencies": {
     "dotenv": "^17.4.2",
-    "express": "^5.2.1"
+    "express": "^5.2.1",
+    "nodemon": "^3.1.14"
   }
 }
