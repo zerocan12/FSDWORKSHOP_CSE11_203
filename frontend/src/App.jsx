@@ -1,15 +1,20 @@
 
-import Home from './components/Home'
-import About from './components/About.jsx'
+import { useState } from 'react'
 import ApiTester from './components/ApiTester.jsx'
+import Signup from './components/Signup.jsx'
 
 function App() {
-  
+  const [page, setPage] = useState('signup')
+
+  if (page === 'api-tester') {
+    return <ApiTester />
+  }
 
   return (
-    <>
-      <ApiTester/>
-    </>
+    <Signup
+      onSuccess={() => setPage('api-tester')}
+      onOpenApiTester={() => setPage('api-tester')}
+    />
   )
 }
 

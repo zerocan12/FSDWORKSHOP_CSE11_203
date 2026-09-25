@@ -1,6 +1,7 @@
 import express from 'express'
 import dotenv from 'dotenv'
 import cors from 'cors'
+import crypto from 'node:crypto'
 
 const port = 3000
 
@@ -24,6 +25,13 @@ const array = [
         age: 17
     }
 ]
+const accounts = []
+
+const hashPassword = (password) => {
+    const salt = crypto.randomBytes(16).toString('hex')
+    const hash = crypto.scryptSync(password, salt, 64).toString('hex')
+    return `${salt}:${hash}`
+}
 
 app.get("/", (req, res) => {
     res.status(200).send(`listening on port ${port}`)
@@ -150,4 +158,41 @@ app.delete("/user/:id", (req, res) => {
 
 app.listen(port, () => {
     console.log(`Server is running at http://localhost:${port}`)
+})
+
+app.post("/signup", (req, res) => {
+    try {
+        const { name, email, password } = req.body
+
+        if (!name?.trim() || !email?.trim() || !password) {
+            return res.status(400).json({ message: "Name, email, and password are required" })
+        }
+
+        const normalizedEmail = email.trim().toLowerCase()
+        const existingAccount = accounts.find((account) => account.email === normalizedEmail)
+
+        if (existingAccount) {
+            return res.status(409).json({ message: "An account with this email already exists" })
+        }
+
+        const account = {
+            id: accounts.length + 1,
+            name: name.trim(),
+            email: normalizedEmail,
+            passwordHash: hashPassword(password),
+        }
+        accounts.push(account)
+
+        res.status(201).json({
+            message: "Account created successfully",
+            user: {
+                id: account.id,
+                name: account.name,
+                email: account.email,
+            },
+        })
+    } catch (err) {
+        console.error(err.message)
+        res.status(500).json({ message: "Internal server error" })
+    }
 })
